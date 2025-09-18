@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serene Jewels - Exquisite Handcrafted Jewelry</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- GSAP CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.14.1/ScrollTrigger.min.js" defer></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    
+    <!-- Custom Styles -->
+    <style>
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        /* Applying our premium fonts */
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #38040e; /* Dark maroon background */
+            color: #f0f0f0; /* Default text color to off-white */
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            color: #ffffff; /* Headings to pure white */
+        }
+        /* Color Palette */
+        :root {
+            --primary-dark: #38040e;
+            --primary-light: #4a0f19;
+            --accent-gold: #c09f80;
+        }
+        .bg-primary { background-color: var(--primary-dark); }
+        .bg-primary-light { background-color: var(--primary-light); }
+        .text-primary-heading { color: #ffffff; }
+        .text-accent { color: var(--accent-gold); }
+        .border-accent { border-color: var(--accent-gold); }
+        .hover\:bg-primary-darker:hover { background-color: #2a030a; }
+
+        /* Animation Styles */
+        .reveal-element {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .reveal-element.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Header scroll effect */
+        header.scrolled {
+            background-color: rgba(56, 4, 14, 0.85); /* Slightly transparent dark maroon */
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Premium hover effect for product cards */
+        .product-card {
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Collection item hover effect */
+        .collection-item .collection-text {
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .collection-item:hover .collection-text {
+            transform: translateY(-10px);
+        }
+        .collection-item .collection-image {
+             transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .collection-item:hover .collection-image {
+            transform: scale(1.05);
+        }
+
+        /* Preloader Styles */
+        #loader {
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+        #loader .loader-inner {
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-left-color: var(--accent-gold);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        body.loaded #loader {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Form placeholder color */
+        ::placeholder {
+            color: #9ca3af;
+            opacity: 1;
+        }
+
+
+
+
+    </style>
+</head>
+<body>
+
+    <!-- Preloader -->
+    <div id="loader" class="fixed inset-0 z-[100] flex items-center justify-center bg-primary">
+        <div class="loader-inner"></div>
+    </div>
+
+
+    <!-- Header Section - Redesigned to match image -->
+    <header id="main-header" class="sticky top-0 z-50 transition-all duration-300">
+        <nav class="container mx-auto px-6 py-6 flex justify-between items-center">
+            <div class="hidden md:flex items-center space-x-8 tracking-widest text-sm">
+                <a href="#home" class="text-gray-300 hover:text-white transition duration-300">HOME</a>
+                <a href="#collections" class="text-gray-300 hover:text-white transition duration-300">COLLECTIONS</a>
+                <a href="#about" class="text-gray-300 hover:text-white transition duration-300">ABOUT</a>
+                <a href="#contact" class="text-gray-300 hover:text-white transition duration-300">CONTACT</a>
+            </div>
+             <!-- Logo for Mobile or Centered Layouts if needed -->
+            <div class="md:hidden text-2xl font-bold text-white tracking-wider">
+                Serene
+            </div>
+            <div class="flex items-center">
+                 <button id="mobile-menu-button" class="p-2 rounded-md text-white">
+                     <svg xmlns="http://www.w.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                 </button>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 bg-primary-light">
+            <a href="#home" class="block py-2 text-gray-300 hover:text-white">HOME</a>
+            <a href="#collections" class="block py-2 text-gray-300 hover:text-white">COLLECTIONS</a>
+            <a href="#about" class="block py-2 text-gray-300 hover:text-white">ABOUT</a>
+            <a href="#contact" class="block py-2 text-gray-300 hover:text-white">CONTACT</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section - Redesigned to match image -->
+        <section id="home" class="container mx-auto px-6 py-20 md:py-32 overflow-hidden min-h-[700px]">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <!-- Left Text Content -->
+                <div class="md:w-1/2 lg:w-5/12 text-center md:text-left reveal-element">
+                    <h2 class="text-5xl md:text-6xl font-bold text-primary-heading leading-tight">
+                        Find Your Signature Piece
+                    </h2>
+                    <p class="mt-16 text-lg text-gray-400">Less searching. More brilliance.</p>
+                    <p class="mt-6 text-xl text-gray-300">Designed to reflect your unique style and elegance.</p>
+            <p class="mt-4 text-lg text-gray-400">Timeless pieces that tell your story. Ethically crafted. Perfectly styled.</p>
+                    <!-- <a href="#featured" class="mt-10 flex inline-block bg-accent text-primary px-10 py-4 rounded-full text-lg hover:bg-opacity-90 transition-all duration-300 hover:scale-105">
+                        Explore Collections
+                    </a> -->
+                     <!-- Social Icons -->
+            <div class="flex space-x-6 mt-8 justify-center md:justify-start text-gray-300">
+                <a href="#" class="hover:text-white transition text-2xl">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="hover:text-white transition text-2xl">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="hover:text-white transition text-2xl">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="hover:text-white transition text-2xl">
+                    <i class="fab fa-pinterest-p"></i>
+                </a>
+            </div>
+                </div>
+
+                <!-- Right Image Collage -->
+<div id="images" class="md:w-1/2 lg:w-6/12 mt-12 md:mt-0 relative h-auto reveal-element" style="transition-delay: 200ms;">
+  <div class="relative w-full h-full">
+    <!-- Back Image -->
+    <img src="Img6.png" 
+         alt="Close up of a delicate necklace" 
+         class="md:absolute md:top-0 md:right-0 w-10/12 md:w-8/12 rounded-lg shadow-2xl z-10 parallax-back overflow-hidden mx-auto">
+
+    <!-- Front Image -->
+    <img src="Img3.png" 
+     alt="Model wearing serene jewelry" 
+     class="md:absolute md:bottom-0 md:left-0 w-10/12 md:w-7/12 rounded-lg shadow-2xl z-20 parallax-front mx-auto mt-0 md:mt-0">
+
+  </div>
+</div>
+
+            </div>
+        </section>
+
+        <!-- Featured Products Section -->
+        <section id="featured" class="py-20 bg-primary-light">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-12 text-primary-heading reveal-element">Featured Pieces</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+                    <!-- Product 1 -->
+                    <div class="product-card bg-primary rounded-lg shadow-lg overflow-hidden group reveal-element">
+                        <div class="overflow-hidden">
+                            <img src="Img5.jpg" alt="Diamond Necklace" class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-semibold text-primary-heading">The Aurora</h3>
+                            <p class="text-gray-400 mt-2">18k White Gold Diamond Necklace</p>
+                            <p class="text-xl font-bold mt-4 text-accent">$2,450</p>
+                        </div>
+                    </div>
+                    <!-- Product 2 -->
+                    <div class="product-card bg-primary rounded-lg shadow-lg overflow-hidden group reveal-element" style="transition-delay: 100ms;">
+                        <div class="overflow-hidden">
+                            <img src="Img2.png" alt="Sapphire Ring" class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-semibold text-primary-heading">Ocean's Kiss</h3>
+                            <p class="text-gray-400 mt-2">Platinum Sapphire & Diamond Ring</p>
+                            <p class="text-xl font-bold mt-4 text-accent">$3,200</p>
+                        </div>
+                    </div>
+                    <!-- Product 3 -->
+                    <div class="product-card bg-primary rounded-lg shadow-lg overflow-hidden group reveal-element" style="transition-delay: 200ms;">
+                        <div class="overflow-hidden">
+                           <img src="Img7.jpg" alt="Gold Earrings" class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-semibold text-primary-heading">Golden Sunburst</h3>
+                            <p class="text-gray-400 mt-2">24k Gold Hoop Earrings</p>
+                            <p class="text-xl font-bold mt-4 text-accent">$1,800</p>
+                        </div>
+                    </div>
+                    <!-- Product 4 -->
+                    <div class="product-card bg-primary rounded-lg shadow-lg overflow-hidden group reveal-element" style="transition-delay: 300ms;">
+                        <div class="overflow-hidden">
+                            <img src="Img8.jpg" alt="Pearl Bracelet" class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-semibold text-primary-heading">Lunar Grace</h3>
+                            <p class="text-gray-400 mt-2">Freshwater Pearl Bracelet</p>
+                            <p class="text-xl font-bold mt-4 text-accent">$950</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- About Us Section -->
+        <section id="about" class="py-20">
+            <div class="container mx-auto px-6 flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 reveal-element">
+                    <img src="Img1.png" alt="Jewelry Workshop" class="rounded-lg shadow-xl">
+                </div>
+                <div class="md:w-1/2 md:pl-16 mt-10 md:mt-0 reveal-element" style="transition-delay: 100ms;">
+                    <h2 class="text-4xl font-bold mb-6 text-primary-heading">A Legacy of Craftsmanship</h2>
+                    <p class="text-gray-400 text-lg mb-4">For over three generations, Serene has been synonymous with exceptional quality and artistry. Our master jewelers combine traditional techniques with contemporary design to create pieces that are not just accessories, but heirlooms.</p>
+                    <p class="text-gray-400 text-lg">We believe in ethically sourced materials and meticulous attention to detail, ensuring every piece that leaves our workshop is a true work of art.</p>
+                    <a href="#" class="mt-8 inline-block text-accent font-bold border-b-2 border-accent hover:text-white hover:border-white transition duration-300">Learn Our Story</a>
+                </div>
+            </div>
+        </section>
+
+      <section id="collections" class="py-20 bg-primary-light">
+    <div class="container mx-auto px-6 text-center">
+        <h2 class="text-4xl font-bold mb-12 text-primary-heading reveal-element">Our Collections</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+            <!-- Collection 1 -->
+            <a href="#" class="block rounded-lg overflow-hidden shadow-lg relative collection-item reveal-element">
+                <div class="w-full h-80 overflow-hidden">
+                    <img src="Img9.jpg" alt="Bridal Collection" class="w-full h-full object-cover collection-image">
+                </div>
+                <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center hover:bg-opacity-30 transition-all duration-300">
+                    <h3 class="text-white text-3xl font-bold collection-text">Bridal Jewelry</h3>
+                </div>
+            </a>
+
+            <!-- Collection 2 -->
+            <a href="#" class="block rounded-lg overflow-hidden shadow-lg relative collection-item reveal-element" style="transition-delay: 100ms;">
+                <div class="w-full h-80 overflow-hidden">
+                    <img src="Img10.jpg" alt="Everyday Collection" class="w-full h-full object-cover collection-image">
+                </div>
+                <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center hover:bg-opacity-30 transition-all duration-300">
+                    <h3 class="text-white text-3xl font-bold collection-text">Everyday Luxury</h3>
+                </div>
+            </a>
+
+            <!-- Collection 3 -->
+            <a href="#" class="block rounded-lg overflow-hidden shadow-lg relative collection-item reveal-element" style="transition-delay: 200ms;">
+                <div class="w-full h-80 overflow-hidden">
+                    <img src="Img11.jpg" alt="Statement Collection" class="w-full h-full object-cover collection-image">
+                </div>
+                <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center hover:bg-opacity-30 transition-all duration-300">
+                    <h3 class="text-white text-3xl font-bold collection-text">Statement</h3>
+                </div>
+            </a>
+
+        </div>
+    </div>
+</section>
+
+
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center">
+                    <h2 class="text-4xl font-bold text-primary-heading reveal-element">Get In Touch</h2>
+                    <p class="text-gray-400 mt-4 text-lg max-w-2xl mx-auto reveal-element">Have a question or a custom request? Our team is ready to help you find the perfect piece.</p>
+                </div>
+                <div class="max-w-xl mx-auto mt-12 reveal-element">
+                    <form action="#" method="POST" class="space-y-6">
+                        <div>
+                            <label for="name" class="sr-only">Name</label>
+                            <input type="text" name="name" id="name" class="w-full px-4 py-3 border border-gray-600 bg-primary-light rounded-lg focus:outline-none focus:ring-2 focus:ring-accent" placeholder="Your Name">
+                        </div>
+                        <div>
+                            <label for="email" class="sr-only">Email</label>
+                            <input type="email" name="email" id="email" class="w-full px-4 py-3 border border-gray-600 bg-primary-light rounded-lg focus:outline-none focus:ring-2 focus:ring-accent" placeholder="Your Email Address">
+                        </div>
+                        <div>
+                            <label for="message" class="sr-only">Message</label>
+                            <textarea name="message" id="message" rows="5" class="w-full px-4 py-3 border border-gray-600 bg-primary-light rounded-lg focus:outline-none focus:ring-2 focus:ring-accent" placeholder="Your Message"></textarea>
+                        </div>
+                        <div class="text-center">
+                             <button type="submit" class="bg-accent text-primary px-10 py-3 rounded-full text-lg hover:bg-opacity-90 transition-transform duration-300 hover:scale-105 w-full md:w-auto">Send Message</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-primary-darker text-white">
+        <div class="container mx-auto px-6 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold tracking-wider">Serene</h3>
+                    <p class="mt-4 text-gray-400">Exquisite jewelry for the modern soul.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg">Quick Links</h4>
+                    <ul class="mt-4 space-y-2">
+                        <li><a href="#collections" class="text-gray-400 hover:text-white transition">Collections</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Shipping & Returns</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg">Contact Us</h4>
+                    <ul class="mt-4 space-y-2 text-gray-400">
+                        <li>info@serenejewels.com</li>
+                        <li>+1 (234) 567-890</li>
+                        <li>123 Elegance Ave, New York, NY</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg">Follow Us</h4>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46,6C21.69,6.35 20.86,6.58 20,6.69C20.88,6.16 21.56,5.32 21.88,4.31C21.05,4.81 20.13,5.16 19.16,5.36C18.37,4.5 17.26,4 16,4C13.65,4 11.73,5.92 11.73,8.29C11.73,8.63 11.77,8.96 11.84,9.27C8.28,9.09 5.11,7.38 2.9,4.79C2.53,5.42 2.33,6.16 2.33,6.96C2.33,8.43 3.07,9.74 4.17,10.49C3.47,10.47 2.82,10.28 2.25,9.95C2.25,9.97 2.25,9.99 2.25,10.01C2.25,12.11 3.74,13.89 5.82,14.31C5.47,14.4 5.1,14.45 4.72,14.45C4.46,14.45 4.21,14.42 3.96,14.37C4.5,16.04 6.11,17.25 8.1,17.29C6.62,18.44 4.74,19.14 2.73,19.14C2.39,19.14 2.05,19.12 1.72,19.07C3.71,20.36 6.02,21.1 8.5,21.1C16,21.1 20.28,14.68 20.28,9.05C20.28,8.87 20.28,8.7 20.27,8.52C21.08,7.95 21.83,7.24 22.46,6Z"></path></svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12,2.163c3.204,0,3.584,0.012,4.85,0.07c3.252,0.148,4.771,1.691,4.919,4.919c0.058,1.265,0.07,1.646,0.07,4.85s-0.012,3.584-0.07,4.85c-0.148,3.227-1.669,4.771-4.919,4.919c-1.266,0.058-1.646,0.07-4.85,0.07s-3.584-0.012-4.85-0.07c-3.252-0.148-4.771-1.691-4.919-4.919c-0.058-1.265-0.07-1.646-0.07-4.85s0.012-3.584,0.07-4.85c0.148-3.227,1.669,4.771,4.919,4.919c1.266-0.058,1.646-0.07,4.85-0.07M12,0C8.74,0,8.333,0.014,7.053,0.072C2.695,0.272,0.273,2.69,0.073,7.052C0.014,8.333,0,8.74,0,12s0.014,3.667,0.072,4.947c0.2,4.358,2.618,6.78,6.98,6.98c1.281,0.058,1.687,0.072,4.947,0.072s3.667-0.014,4.947-0.072c4.354-0.2,6.782-2.618,6.979-6.98c0.059-1.28,0.073-1.687,0.073-4.947s-0.014-3.667-0.072-4.947c-0.196-4.354-2.617-6.78-6.979-6.98C15.667,0.014,15.26,0,12,0L12,0z M12,5.838c-3.403,0-6.162,2.759-6.162,6.162s2.759,6.162,6.162,6.162s6.162-2.759,6.162-6.162S15.403,5.838,12,5.838z M12,16.162c-2.209,0-4-1.79-4-4s1.791-4,4-4s4,1.79,4,4S14.209,16.162,12,16.162z M16.965,5.595c-0.612,0-1.105,0.493-1.105,1.105s0.493,1.105,1.105,1.105s1.105-0.493,1.105-1.105S17.577,5.595,16.965,5.595z"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-800 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 Serene Jewels. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        // Preloader
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+            // GSAP Animation for Hero Section
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.to('#hero', {
+        opacity: 1,
+        y: 0,
+        duration: 1.5,
+        ease: 'power2.out',
+        scrollTrigger: {
+            trigger: '#home',
+            start: 'top 80%',
+        }
+    });
+    
+    gsap.to('#images', {
+        opacity: 1,
+        y: 0,
+        duration: 1.5,
+        ease: 'power2.out',
+        scrollTrigger: {
+            trigger: '#home',
+            start: 'top 80%',
+        }
+    });
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when a link is clicked
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a, button');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Scroll Reveal Animations
+        const revealElements = document.querySelectorAll('.reveal-element');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        revealElements.forEach(element => {
+            observer.observe(element);
+        });
+
+        // Header scroll effect
+        const header = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Parallax effect for hero images
+        const backImage = document.querySelector('.parallax-back');
+        const frontImage = document.querySelector('.parallax-front');
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            if (backImage && frontImage && scrollY < window.innerHeight) {
+                backImage.style.transform = `translateY(${scrollY * 0.1}px)`;
+                frontImage.style.transform = `translateY(${scrollY * 0.25}px)`;
+            }
+        });
+
+    </script>
+</body>
+</html>
+
